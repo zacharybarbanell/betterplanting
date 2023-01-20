@@ -29,13 +29,11 @@ public abstract class MixinFarmBlock extends Block {
 
     @Inject(method = "fallOn", at = @At("HEAD"))
     protected void onFallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci){
-        if(!level.isClientSide()){
-            if(entity instanceof ItemEntity){
-                ItemStack itemstack = ((ItemEntity) entity).getItem();
-                if(itemstack.getItem() instanceof BlockItem && ((BlockItem) itemstack.getItem()).getBlock() instanceof CropBlock){
-                    BlockPlaceContext fakecontext = new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, itemstack, new BlockHitResult(null, Direction.UP, pos, false));
-                    ((BlockItem) itemstack.getItem()).place(fakecontext);
-                }
+        if(fallDistance > 0.864 && !level.isClientSide() && entity instanceof ItemEntity){
+            ItemStack itemstack = ((ItemEntity) entity).getItem();
+            if(itemstack.getItem() instanceof BlockItem && ((BlockItem) itemstack.getItem()).getBlock() instanceof CropBlock){
+                BlockPlaceContext fakecontext = new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, itemstack, new BlockHitResult(null, Direction.UP, pos, false));
+                ((BlockItem) itemstack.getItem()).place(fakecontext);
             }
         }
     }
