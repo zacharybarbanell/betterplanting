@@ -1,4 +1,4 @@
-package com.example.betterplanting.mixins;
+package com.zacharybarbanell.betterplanting.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,6 @@
 {
     "required": true,
-    "package": "com.example.betterplanting.mixins",
+    "package": "com.zacharybarbanell.betterplanting.mixins",
     "mixins": [
         "MixinFarmBlock"
     ],
