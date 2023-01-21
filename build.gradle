@@ -151,7 +151,7 @@ dependencies {
 mixin {
     // MixinGradle Settings
     add sourceSets.main, "betterplanting.refmap.json"
-    config "mixins.json"
+    config "com.zacharybarbanell.betterplanting.mixins.json"
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
