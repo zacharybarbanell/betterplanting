@@ -2,7 +2,7 @@
     "required": true,
     "package": "com.zacharybarbanell.betterplanting.mixins",
     "mixins": [
-        "MixinFarmBlock"
+        "MixinEntity"
     ],
     "refmap": "betterplanting.refmap.json"
 }
