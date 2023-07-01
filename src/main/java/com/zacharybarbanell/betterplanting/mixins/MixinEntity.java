@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.zacharybarbanell.betterplanting.config.Config;
+import com.zacharybarbanell.betterplanting.BetterPlanting;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,7 +37,7 @@ public class MixinEntity {
     private static TagKey<Item> PLACABLE = ItemTags.create(new ResourceLocation("betterplanting", "plantable"));
 
     private static boolean isValid(BlockItem blockitem) {
-        return blockitem.builtInRegistryHolder().is(PLACABLE) || blockitem.getBlock() instanceof CropBlock && Config.SERVER.autoSelectCrops();
+        return blockitem.builtInRegistryHolder().is(PLACABLE) || blockitem.getBlock() instanceof CropBlock && BetterPlanting.autoSelectCrops.get();
     }
 
     @Inject(
@@ -46,7 +46,7 @@ public class MixinEntity {
         require = 1    
     )
     protected void afterFallOn(double vy, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
-        if(!level.isClientSide() && this.fallDistance > Config.SERVER.minHeight() && (Object) this instanceof ItemEntity itementity){
+        if(!level.isClientSide() && this.fallDistance > BetterPlanting.minHeight.get() && (Object) this instanceof ItemEntity itementity){
             ItemStack itemstack = itementity.getItem();
             if(itemstack.getItem() instanceof BlockItem blockitem && isValid(blockitem)){
                 BlockPlaceContext fakecontext = new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, itemstack, new BlockHitResult(null, Direction.UP, pos, false));

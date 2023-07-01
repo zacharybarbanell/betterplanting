@@ -1,14 +1,20 @@
 package com.zacharybarbanell.betterplanting;
 
-import com.zacharybarbanell.betterplanting.config.Config;
+import java.nio.file.Paths;
 
-import net.minecraftforge.fml.ModLoadingContext;
+import com.zacharybarbanell.betterplanting.config.Config;
+import com.zacharybarbanell.betterplanting.config.ConfigEntry;
+
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 
 @Mod("betterplanting")
 public class BetterPlanting {
+    private static Config config = new Config(Paths.get("config/betterplanting.cfg"), "Better Planting config");
+
+    public static ConfigEntry<Boolean> autoSelectCrops = config.register("autoSelectCrops", true);
+    public static ConfigEntry<Double> minHeight = config.register("minHeight", 0.864);
+
     public BetterPlanting() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
+        config.load();
     }
 }
