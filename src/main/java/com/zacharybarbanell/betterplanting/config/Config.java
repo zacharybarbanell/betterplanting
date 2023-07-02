@@ -13,10 +13,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
+
+import javax.swing.text.html.Option;
 
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
+
+import net.minecraftforge.client.event.InputEvent.MouseButton.Pre;
 
 public class Config {
     private static Logger LOGGER = LogUtils.getLogger();
@@ -72,7 +77,13 @@ public class Config {
             if (val != null) {
                 Optional<?> result = Parser.parse(entry.name, entry.clazz);
                 if (result.isPresent()) {
-                    entry.value = result.get();
+                    Object resultVal = result.get();
+                    if (entry.isValid(resultVal)) {
+                        entry.value = resultVal;
+                    }
+                    else {
+                        LOGGER.warn("{} is not a legal value for {}, replacing it with default", resultVal, entry.name);
+                    }
                 }
                 else {
                     LOGGER.warn("Could not parse {} as a value for {}, replacing it with default", in.getProperty(entry.name), entry.name);
@@ -100,11 +111,15 @@ public class Config {
         private final String name;
         private final Class<T> clazz;
         private Object value;
+        private Optional<String> comment;
+        private Predicate<T> restriction;
 
         private Entry(String name, Class<T> clazz, T value) {
             this.name = name;
             this.clazz = clazz;
             this.value = value;
+            this.comment = Optional.empty();
+            this.restriction = (val) -> true;
         }
 
         @Override
@@ -113,6 +128,22 @@ public class Config {
                 throw new IllegalStateException("Config is not loaded");
             }
             return (T) value;
+        }
+
+        private boolean isValid(Object val) {
+            return restriction.test((T) val);
+        }
+
+        @Override
+        public ConfigEntry<T> comment(String comment) {
+            this.comment = Optional.of(comment);
+            return this;
+        }
+
+        @Override
+        public ConfigEntry<T> addRestriction(Predicate<T> restriction) {
+            this.restriction = this.restriction.and(restriction);
+            return this;
         }
     }
 }
